@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"fmt"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -60,32 +61,21 @@ func segmentKube(p *powerline) {
 		}
 	}
 
-	cluster := ""
+	name := config.CurrentContext
 	namespace := ""
 	for _, context := range config.Contexts {
 		if context.Name == config.CurrentContext {
-			cluster = context.Context.Cluster
 			namespace = context.Context.Namespace
 			break
 		}
 	}
 
-	// When you use gke your clusters may look something like gke_projectname_availability-zone_cluster-01
-	// instead I want it to read as `cluster-01`
-	// So we remove the first 3 segments of this string, if the flag is set, and there are enough segments
-	if strings.HasPrefix(cluster, "gke") && *p.args.ShortenGKENames {
-		segments := strings.Split(cluster, "_")
-		if len(segments) > 3 {
-			cluster = strings.Join(segments[3:], "_")
-		}
-	}
-
 	// Only draw the icon once
 	kubeIconHasBeenDrawnYet := false
-	if cluster != "" {
+	if name != "" {
 		kubeIconHasBeenDrawnYet = true
 		p.appendSegment("kube-cluster", segment{
-			content:    fmt.Sprintf("⎈ %s", cluster),
+			content:    fmt.Sprintf("⎈ %s", name),
 			foreground: p.theme.KubeClusterFg,
 			background: p.theme.KubeClusterBg,
 		})
