@@ -3,13 +3,13 @@ package main
 import (
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
 
 	"fmt"
 
+	"gopkg.in/ini.v1"
 	"gopkg.in/yaml.v2"
 )
 
@@ -52,14 +52,38 @@ func readKubeConfig(config *KubeConfig, path string) (err error) {
 	return
 }
 
+func readGcloudAccount(basePath string) (string, error) {
+	data, err := ioutil.ReadFile(filepath.Join(basePath, "active_config"))
+	if err != nil {
+		return "", err
+	}
+	filename := filepath.Join(basePath, "configurations", "config_"+strings.TrimSpace(string(data)))
+
+	cfg, err := ini.Load(filename)
+	if err != nil {
+		return "", err
+	}
+	account := cfg.Section("core").Key("account").String()
+	return account, nil
+}
+
 func segmentKube(p *powerline) {
-	paths := append(strings.Split(os.Getenv("KUBECONFIG"), ":"), path.Join(homePath(), ".kube", "config"))
+	paths := append(strings.Split(os.Getenv("KUBECONFIG"), ":"), filepath.Join(homePath(), ".kube", "config"))
 	config := &KubeConfig{}
 	for _, configPath := range paths {
 		if readKubeConfig(config, configPath) == nil {
 			break
 		}
 	}
+
+	// We also read the gcloud config to determine the current account. In gke the kubernetes account is determined
+	// via gcloud. We set up service accounts with a sudo- prefix with additional permissions
+	gcloudBase := filepath.Join(homePath(), ".config", "gcloud")
+	account, err := readGcloudAccount(gcloudBase)
+	if err != nil {
+		fmt.Println(err)
+	}
+	sudo := strings.HasPrefix(account, "sudo-")
 
 	name := config.CurrentContext
 	namespace := ""
@@ -74,10 +98,16 @@ func segmentKube(p *powerline) {
 	kubeIconHasBeenDrawnYet := false
 	if name != "" {
 		kubeIconHasBeenDrawnYet = true
+		fg, bg := p.theme.KubeClusterFg, p.theme.KubeClusterBg
+		if sudo {
+			fg = 9  // very red
+			bg = 51 // cyan
+			name = name + "-sudo"
+		}
 		p.appendSegment("kube-cluster", segment{
 			content:    fmt.Sprintf("⎈ %s", name),
-			foreground: p.theme.KubeClusterFg,
-			background: p.theme.KubeClusterBg,
+			foreground: fg,
+			background: bg,
 		})
 	}
 
