@@ -26,20 +26,19 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	args                   args
-	cwd                    string
-	pathAliases            map[string]string
-	theme                  Theme
-	shellInfo              ShellInfo
-	reset                  string
-	symbolTemplates        Symbols
-	priorities             map[string]int
-	ignoreRepos            map[string]bool
-	Segments               [][]segment
-	curSegment             int
-	align                  alignment
-	rightPowerline         *powerline
-	appendEastAsianPadding int
+	args            args
+	cwd             string
+	pathAliases     map[string]string
+	theme           Theme
+	shellInfo       ShellInfo
+	reset           string
+	symbolTemplates Symbols
+	priorities      map[string]int
+	ignoreRepos     map[string]bool
+	Segments        [][]segment
+	curSegment      int
+	align           alignment
+	rightPowerline  *powerline
 }
 
 func newPowerline(args args, cwd string, priorities map[string]int, align alignment) *powerline {
@@ -119,7 +118,7 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 	if segment.separatorForeground == 0 {
 		segment.separatorForeground = segment.background
 	}
-	priority, _ := p.priorities[origin]
+	priority := p.priorities[origin]
 	segment.priority += priority
 	segment.width = segment.computeWidth(*p.args.Condensed)
 	p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)

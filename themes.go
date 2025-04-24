@@ -24,9 +24,6 @@ type Theme struct {
 	UsernameBg     uint8
 	UsernameRootBg uint8
 
-	HostnameFg uint8
-	HostnameBg uint8
-
 	// The foreground-background mapping is precomputed and stored in a map for improved performance
 	// The old script used to brute-force this at runtime
 	HostnameColorizedFgMap map[uint8]uint8
@@ -47,9 +44,6 @@ type Theme struct {
 	SshFg uint8
 	SshBg uint8
 
-	DockerMachineFg uint8
-	DockerMachineBg uint8
-
 	KubeClusterFg   uint8
 	KubeClusterBg   uint8
 	KubeNamespaceFg uint8
@@ -57,9 +51,6 @@ type Theme struct {
 
 	DotEnvFg uint8
 	DotEnvBg uint8
-
-	AWSFg uint8
-	AWSBg uint8
 
 	RepoCleanFg uint8
 	RepoCleanBg uint8
@@ -73,9 +64,6 @@ type Theme struct {
 	CmdPassedBg uint8
 	CmdFailedFg uint8
 	CmdFailedBg uint8
-
-	SvnChangesFg uint8
-	SvnChangesBg uint8
 
 	GitAheadFg      uint8
 	GitAheadBg      uint8
@@ -92,36 +80,12 @@ type Theme struct {
 	GitStashedFg    uint8
 	GitStashedBg    uint8
 
-	VirtualEnvFg uint8
-	VirtualEnvBg uint8
-
-	VirtualGoFg uint8
-	VirtualGoBg uint8
-
-	PerlbrewFg uint8
-	PerlbrewBg uint8
-
 	TFWsFg uint8
 	TFWsBg uint8
-
-	TimeFg uint8
-	TimeBg uint8
 
 	ShellVarFg uint8
 	ShellVarBg uint8
 
 	NodeFg uint8
 	NodeBg uint8
-
-	LoadFg           uint8
-	LoadBg           uint8
-	LoadHighBg       uint8
-	LoadAvgValue     byte
-	LoadThresholdBad float64
-
-	NixShellFg uint8
-	NixShellBg uint8
-
-	DurationFg uint8
-	DurationBg uint8
 }

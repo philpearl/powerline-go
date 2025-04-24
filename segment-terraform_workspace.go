@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 )
 
@@ -11,7 +10,7 @@ func segmentTerraformWorkspace(p *powerline) {
 	stat, err := os.Stat(wsFile)
 
 	if err == nil && !stat.IsDir() {
-		workspace, err := ioutil.ReadFile(wsFile)
+		workspace, err := os.ReadFile(wsFile)
 		if err == nil {
 			p.appendSegment("terraform-workspace", segment{
 				content:    string(workspace),

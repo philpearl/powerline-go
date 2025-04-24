@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -40,7 +39,7 @@ func readKubeConfig(config *KubeConfig, path string) (err error) {
 	if err != nil {
 		return
 	}
-	fileContent, err := ioutil.ReadFile(absolutePath)
+	fileContent, err := os.ReadFile(absolutePath)
 	if err != nil {
 		return
 	}
@@ -53,7 +52,7 @@ func readKubeConfig(config *KubeConfig, path string) (err error) {
 }
 
 func readGcloudAccount(basePath string) (string, error) {
-	data, err := ioutil.ReadFile(filepath.Join(basePath, "active_config"))
+	data, err := os.ReadFile(filepath.Join(basePath, "active_config"))
 	if err != nil {
 		return "", err
 	}
